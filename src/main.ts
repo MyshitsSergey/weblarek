@@ -1,5 +1,11 @@
 import './scss/styles.scss';
 
+// main.ts
+import { API_URL } from './utils/constants';
+import { LarekApi } from './components/Models/LarekApi';
+
+
+
 import { CatalogModel } from './components/Models/CatalogModel';
 import { BasketModel } from './components/Models/BasketModel';
 import { OrderModel } from './components/Models/OrderModel';
@@ -39,13 +45,7 @@ console.log('После очистки заказа:', order.getOrder());
 console.log('Ошибки валидации после очистки:', order.validate());
 
 
-
-// import { CatalogModel } from './components/Models/CatalogModel';
-import { LarekApi } from './components/Models/LarekApi';
-// другие импорты
-
-// Создаём экземпляр API для общения с сервером
-const api = new LarekApi('https://larek-api.nomoreparties.co');
+const api = new LarekApi(API_URL); // теперь базовый URL включает /api/weblarek
 
 // Создаём модель каталога
 const catalogModel = new CatalogModel();
