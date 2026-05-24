@@ -19,3 +19,6 @@
 
 @use "variables" as *;
 @use "mixins";
+.card__image {
+  pointer-events: none;
+}
