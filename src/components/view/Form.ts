@@ -1,5 +1,6 @@
 import { Component } from '../base/Component';
 import { IEvents } from '../base/Events';
+import { ensureElement } from '../../utils/utils';
 
 export class Form<T> extends Component<T> {
   protected form: HTMLFormElement;
@@ -9,8 +10,8 @@ export class Form<T> extends Component<T> {
   constructor(protected container: HTMLFormElement, protected events: IEvents) {
     super(container);
     this.form = container;
-    this.button = container.querySelector('.button[type="submit"]')!;
-    this.errorsSpan = container.querySelector('.form__errors')!;
+    this.button = ensureElement<HTMLButtonElement>('.button[type="submit"]', container);
+    this.errorsSpan = ensureElement<HTMLElement>('.form__errors', container);
     this.form.addEventListener('input', (evt: Event) => {
       const target = evt.target as HTMLInputElement;
       const field = target.name as keyof T;
@@ -23,6 +24,11 @@ export class Form<T> extends Component<T> {
     });
   }
 
-  set valid(value: boolean) { if (this.button) this.button.disabled = !value; }
-  set errors(value: string) { if (this.errorsSpan) this.errorsSpan.textContent = value; }
+  set valid(value: boolean) {
+    this.button.disabled = !value;
+  }
+
+  set errors(value: string) {
+    this.errorsSpan.textContent = value;
+  }
 }

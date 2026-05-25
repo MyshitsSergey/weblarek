@@ -1,5 +1,6 @@
 import { Component } from '../base/Component';
 import { IEvents } from '../base/Events';
+import { ensureElement } from '../../utils/utils';
 
 export class Success extends Component<{ total: number }> {
   private closeButton: HTMLButtonElement;
@@ -7,12 +8,12 @@ export class Success extends Component<{ total: number }> {
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
-    this.closeButton = container.querySelector('.order-success__close')!;
-    this.description = container.querySelector('.order-success__description')!;
+    this.closeButton = ensureElement<HTMLButtonElement>('.order-success__close', container);
+    this.description = ensureElement<HTMLElement>('.order-success__description', container);
     this.closeButton.addEventListener('click', () => this.events.emit('success:close'));
   }
 
   set total(value: number) {
-    if (this.description) this.description.textContent = `Списано ${value} синапсов`;
+    this.description.textContent = `Списано ${value} синапсов`;
   }
 }
