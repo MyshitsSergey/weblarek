@@ -58,6 +58,7 @@ export class CatalogModel {
   }
 
   setPreview(product: IProduct): void {
+    console.log('📦 setPreview вызван, product:', product.id);//-------проверка
     this.selectedProduct = product;
     this.events.emit('preview:changed', product); // добавлено событие
   }
