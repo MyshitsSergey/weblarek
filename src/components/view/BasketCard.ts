@@ -1,26 +1,25 @@
 import { Card } from './Card';
-import { IEvents } from '../base/Events';
+import { ensureElement } from '../../utils/utils';
+
+export interface IBasketCardActions {
+  onRemove: (event: MouseEvent) => void;
+}
 
 export class BasketCard extends Card {
   private indexElement: HTMLElement;
   private deleteButton: HTMLButtonElement;
-  private _id: string = '';
 
-  constructor(container: HTMLElement, protected events: IEvents) {
+  constructor(container: HTMLElement, actions?: IBasketCardActions) {
     super(container);
-    this.indexElement = container.querySelector('.basket__item-index')!;
-    this.deleteButton = container.querySelector('.basket__item-delete')!;
-    this.deleteButton.addEventListener('click', (evt) => {
-      evt.stopPropagation();
-      this.events.emit('basket:remove', { id: this._id });
-    });
-  }
-
-  set id(value: string) {
-    this._id = value;
+    this.indexElement = ensureElement<HTMLElement>('.basket__item-index', container);
+    this.deleteButton = ensureElement<HTMLButtonElement>('.basket__item-delete', container);
+    
+    if (actions?.onRemove) {
+      this.deleteButton.addEventListener('click', actions.onRemove);
+    }
   }
 
   set index(value: number) {
-    if (this.indexElement) this.indexElement.textContent = String(value);
+    this.indexElement.textContent = String(value);
   }
 }

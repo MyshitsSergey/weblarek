@@ -7,14 +7,18 @@ export class OrderModel {
   private phone: string = '';
   private email: string = '';
 
-  constructor(protected events: IEvents) {}
+  constructor(protected events: IEvents) {
+    console.log('OrderModel создан, events:', !!events); // проверка
+  }
 
   updateOrder<K extends keyof IBuyer>(field: K, value: IBuyer[K]): void {
+    console.log('🔄 updateOrder ВЫЗВАН, field:', field, 'value:', value); // ← ДОБАВЬ ЭТУ СТРОКУ
     if (field === 'payment') this.payment = value as TPayment;
     if (field === 'address') this.address = value as string;
     if (field === 'phone') this.phone = value as string;
     if (field === 'email') this.email = value as string;
     this.events.emit('order:changed');
+    console.log('✅ order:changed сгенерировано'); // ← И ЭТУ
   }
 
   getOrder(): IBuyer | null {

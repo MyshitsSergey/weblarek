@@ -1,41 +1,38 @@
 import { Card } from './Card';
-import { IEvents } from '../base/Events';
-import { categoryMap, CDN_URL } from '../../utils/constants';
+import { CDN_URL, categoryMap } from '../../utils/constants';
+import { ensureElement } from '../../utils/utils';
+
+// Интерфейс для действий карточки
+export interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+}
 
 export class CatalogCard extends Card {
-  private _image?: HTMLImageElement;
-  private _category?: HTMLElement;
-  private _id: string = '';
+  protected imageElement: HTMLImageElement;
+  protected categoryElement: HTMLElement;
 
-  constructor(container: HTMLElement, protected events: IEvents) {
+  constructor(container: HTMLElement, actions?: ICardActions) {
     super(container);
-    this._image = container.querySelector('.card__image') as HTMLImageElement;
-    this._category = container.querySelector('.card__category') as HTMLElement;
-    this.container.onmousedown = () => {
-      this.events.emit('card:select', { id: this._id });
-    };
-  }
-
-  set id(value: string) {
-    this._id = value;
+    this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
+    this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
+    
+    if (actions?.onClick) {
+      this.container.addEventListener('click', actions.onClick);
+    }
   }
 
   set image(value: string) {
-    if (this._image) {
-      const fullUrl = value.startsWith('http') ? value : CDN_URL + value;
-      this.setImage(this._image, fullUrl, this.title);
-    }
+    const fullUrl = value.startsWith('http') ? value : CDN_URL + value;
+    this.setImage(this.imageElement, fullUrl, this.title);
   }
 
   set category(value: string) {
-    if (this._category) {
-      this._category.textContent = value;
-      const modifier = categoryMap[value as keyof typeof categoryMap] || 'card__category_other';
-      const classesToRemove = Array.from(this._category.classList).filter(c =>
-        c.startsWith('card__category_')
-      );
-      classesToRemove.forEach(c => this._category!.classList.remove(c));
-      this._category.classList.add(modifier);
-    }
+    this.categoryElement.textContent = value;
+    const modifier = categoryMap[value as keyof typeof categoryMap] || 'card__category_other';
+    const classesToRemove = Array.from(this.categoryElement.classList).filter(c =>
+      c.startsWith('card__category_')
+    );
+    classesToRemove.forEach(c => this.categoryElement.classList.remove(c));
+    this.categoryElement.classList.add(modifier);
   }
 }

@@ -8,15 +8,38 @@ export class ContactsForm extends Form<{ email: string; phone: string }> {
 
   constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
+    
+    console.log('📝 ContactsForm создан, name:', container.name);
+    
     this.emailInput = ensureElement<HTMLInputElement>('input[name="email"]', container);
     this.phoneInput = ensureElement<HTMLInputElement>('input[name="phone"]', container);
+    
+    if (!this.emailInput || !this.phoneInput) {
+      throw new Error('ContactsForm: не найдены поля email или phone');
+    }
+    
+    console.log('✅ ContactsForm: поля email и phone найдены');
   }
 
   set email(value: string) {
-    this.emailInput.value = value;
+    if (this.emailInput) {
+      this.emailInput.value = value;
+      console.log('📧 ContactsForm.email установлен:', value);
+    }
   }
 
   set phone(value: string) {
-    this.phoneInput.value = value;
+    if (this.phoneInput) {
+      this.phoneInput.value = value;
+      console.log('📞 ContactsForm.phone установлен:', value);
+    }
+  }
+  
+  get email(): string {
+    return this.emailInput?.value || '';
+  }
+  
+  get phone(): string {
+    return this.phoneInput?.value || '';
   }
 }
