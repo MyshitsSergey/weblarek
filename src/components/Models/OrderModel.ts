@@ -8,23 +8,24 @@ export class OrderModel {
   private email: string = '';
 
   constructor(protected events: IEvents) {
-    console.log('OrderModel создан, events:', !!events); // проверка
+    console.log('OrderModel создан, events:', !!events);
   }
 
   updateOrder<K extends keyof IBuyer>(field: K, value: IBuyer[K]): void {
-    console.log('🔄 updateOrder ВЫЗВАН, field:', field, 'value:', value); // ← ДОБАВЬ ЭТУ СТРОКУ
+    console.log('🔄 updateOrder ВЫЗВАН, field:', field, 'value:', value);
     if (field === 'payment') this.payment = value as TPayment;
     if (field === 'address') this.address = value as string;
     if (field === 'phone') this.phone = value as string;
     if (field === 'email') this.email = value as string;
     this.events.emit('order:changed');
-    console.log('✅ order:changed сгенерировано'); // ← И ЭТУ
+    console.log('✅ order:changed сгенерировано');
   }
 
-  getOrder(): IBuyer | null {
-    if (this.payment === null) return null;
+  getOrder(): IBuyer {
+    // Возвращаем объект, соответствующий интерфейсу IBuyer
+    // Для payment используем значение по умолчанию, если null
     return {
-      payment: this.payment,
+      payment: this.payment || 'online', // значение по умолчанию, если null
       address: this.address,
       phone: this.phone,
       email: this.email,

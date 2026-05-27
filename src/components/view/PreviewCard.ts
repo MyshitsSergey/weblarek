@@ -12,19 +12,27 @@ export class PreviewCard extends Card {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
 
-  constructor(container: HTMLElement, actions?: IPreviewCardActions) {
-    super(container);
-    this.button = ensureElement<HTMLButtonElement>('.card__button', this.container);
-    this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
-    this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
-    this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
-    
-    if (actions?.onToggleBasket) {
-      this.button.addEventListener('click', actions.onToggleBasket);
-    }
+constructor(container: HTMLElement, actions?: IPreviewCardActions) {
+  super(container);
+  this.button = ensureElement<HTMLButtonElement>('.card__button', this.container);
+  this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
+  this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
+  this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
+  
+  if (actions?.onToggleBasket) {
+    this.button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      actions.onToggleBasket(e);
+      // Закрываем модальное окно после клика
+      const modal = document.querySelector('#modal-container');
+      if (modal) {
+        modal.classList.remove('modal_active');
+      }
+    });
   }
+}
 
-  get element(): HTMLElement {
+  getContent(): HTMLElement {
     return this.container;
   }
 

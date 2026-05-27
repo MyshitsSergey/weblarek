@@ -2,30 +2,40 @@ import { Form } from './Form';
 import { IEvents } from '../base/Events';
 import { ensureElement } from '../../utils/utils';
 
-export class OrderForm extends Form<{ address: string; payment: string }> {
+// Интерфейс для данных формы заказа
+export interface IOrderFormData {
+  address: string;
+  payment: string;
+}
+
+export class OrderForm extends Form<IOrderFormData> {
   private cardButton: HTMLButtonElement;
   private cashButton: HTMLButtonElement;
   private addressInput: HTMLInputElement;
 
   constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
+    
+    console.log('📝 OrderForm создан, name:', container.name);
+    
     this.cardButton = ensureElement<HTMLButtonElement>('button[name="card"]', container);
     this.cashButton = ensureElement<HTMLButtonElement>('button[name="cash"]', container);
     this.addressInput = ensureElement<HTMLInputElement>('input[name="address"]', container);
     
     this.cardButton.addEventListener('click', () => {
-      console.log('cardButton clicked'); // для проверки
+      console.log('💳 cardButton clicked');
       this.events.emit('order.payment:change', { payment: 'online' });
     });
     
     this.cashButton.addEventListener('click', () => {
-      console.log('cashButton clicked'); // для проверки
+      console.log('💰 cashButton clicked');
       this.events.emit('order.payment:change', { payment: 'upon receipt' });
     });
   }
 
   set address(value: string) {
-    if (this.addressInput) this.addressInput.value = value;
+    this.addressInput.value = value;
+    console.log('📍 OrderForm.address установлен:', value);
   }
 
   set selectedPayment(value: 'online' | 'upon receipt' | null) {

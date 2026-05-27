@@ -2,7 +2,14 @@ import { Component } from '../base/Component';
 import { IEvents } from '../base/Events';
 import { ensureElement } from '../../utils/utils';
 
-export class Basket extends Component<{ items: HTMLElement[]; total: number }> {
+// Интерфейс для данных корзины
+export interface IBasketData {
+  items: HTMLElement[];
+  total: number;
+  buttonDisabled: boolean;
+}
+
+export class Basket extends Component<IBasketData> {
   private list: HTMLElement;
   private button: HTMLButtonElement;
   private totalSpan: HTMLElement;
