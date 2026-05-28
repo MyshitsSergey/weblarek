@@ -85,9 +85,10 @@ events.on('catalog:changed', () => {
 events.on('preview:changed', () => {
   const product = catalogModel.getPreview();
   if (!product) return;
+  
   previewCard.render(product);
-  previewCard.buttonText = basketModel.hasItem(product.id) ? 'Удалить из корзины' : 'Купить';
-  previewCard.buttonDisabled = product.price === null;
+  previewCard.updateButtonState(product.price, basketModel.hasItem(product.id));
+  
   modal.content = previewCard.getContent();
   modal.open();
 });

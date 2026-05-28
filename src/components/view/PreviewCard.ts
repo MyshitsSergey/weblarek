@@ -12,25 +12,25 @@ export class PreviewCard extends Card {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
 
-constructor(container: HTMLElement, actions?: IPreviewCardActions) {
-  super(container);
-  this.button = ensureElement<HTMLButtonElement>('.card__button', this.container);
-  this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
-  this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
-  this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
-  
-  if (actions?.onToggleBasket) {
-    this.button.addEventListener('click', (e) => {
-      e.stopPropagation();
-      actions.onToggleBasket(e);
-      // Закрываем модальное окно после клика
-      const modal = document.querySelector('#modal-container');
-      if (modal) {
-        modal.classList.remove('modal_active');
-      }
-    });
+  constructor(container: HTMLElement, actions?: IPreviewCardActions) {
+    super(container);
+    this.button = ensureElement<HTMLButtonElement>('.card__button', this.container);
+    this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
+    this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
+    this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
+    
+    if (actions?.onToggleBasket) {
+      this.button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        actions.onToggleBasket(e);
+        // Закрываем модальное окно после клика
+        const modal = document.querySelector('#modal-container');
+        if (modal) {
+          modal.classList.remove('modal_active');
+        }
+      });
+    }
   }
-}
 
   getContent(): HTMLElement {
     return this.container;
@@ -61,5 +61,19 @@ constructor(container: HTMLElement, actions?: IPreviewCardActions) {
 
   set buttonDisabled(value: boolean) {
     this.button.disabled = value;
+  }
+
+  // Добавьте этот метод
+  updateButtonState(price: number | null, isInBasket: boolean): void {
+    if (price === null) {
+      this.buttonText = 'Недоступно';
+      this.buttonDisabled = true;
+    } else if (isInBasket) {
+      this.buttonText = 'Удалить из корзины';
+      this.buttonDisabled = false;
+    } else {
+      this.buttonText = 'Купить';
+      this.buttonDisabled = false;
+    }
   }
 }
