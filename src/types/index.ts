@@ -21,7 +21,7 @@ export interface IProduct {
 
 // Интерфейс данных покупателя
 export interface IBuyer {
-  payment: TPayment;
+  payment?: TPayment;
   email: string;
   phone: string;
   address: string;

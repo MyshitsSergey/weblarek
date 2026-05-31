@@ -7,25 +7,20 @@ export class OrderModel {
   private phone: string = '';
   private email: string = '';
 
-  constructor(protected events: IEvents) {
-    console.log('OrderModel создан, events:', !!events);
-  }
+  constructor(protected events: IEvents) {}
 
   updateOrder<K extends keyof IBuyer>(field: K, value: IBuyer[K]): void {
-    console.log('🔄 updateOrder ВЫЗВАН, field:', field, 'value:', value);
     if (field === 'payment') this.payment = value as TPayment;
     if (field === 'address') this.address = value as string;
     if (field === 'phone') this.phone = value as string;
     if (field === 'email') this.email = value as string;
     this.events.emit('order:changed');
-    console.log('✅ order:changed сгенерировано');
   }
 
   getOrder(): IBuyer {
-    // Возвращаем объект, соответствующий интерфейсу IBuyer
-    // Для payment используем значение по умолчанию, если null
+    // Преобразуем null в undefined для совместимости с опциональным полем
     return {
-      payment: this.payment || 'online', // значение по умолчанию, если null
+      payment: this.payment ?? undefined,
       address: this.address,
       phone: this.phone,
       email: this.email,
